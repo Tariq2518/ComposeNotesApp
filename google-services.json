@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "474895238267",
+    "project_id": "newnotesapp-10e82",
+    "storage_bucket": "newnotesapp-10e82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:474895238267:android:12d2afd4d3a970f7fccede",
+        "android_client_info": {
+          "package_name": "com.tariq.newtodoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "474895238267-svisk4gshg1v6fc39v52p3mk0l2c8lig.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4lLduIIGHWuFMYNp384McZSe-tVa3syI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "474895238267-svisk4gshg1v6fc39v52p3mk0l2c8lig.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
