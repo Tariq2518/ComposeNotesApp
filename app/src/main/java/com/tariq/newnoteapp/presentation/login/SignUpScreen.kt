@@ -29,24 +29,22 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.UiMode
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tariq.newnoteapp.navigation.AuthNavRoutes
-import com.tariq.newnoteapp.navigation.Graph
 import com.tariq.newnoteapp.ui.theme.NewNotesAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
+fun SignUpScreen(
     navController: NavHostController,
     loginViewModel: LoginViewModel? = null,
-    onNavigateToHome: () -> Unit = { },
-    onNavigateToSignUp: () -> Unit = { },
+    onNavigateToHome: () -> Unit = {},
+    onNavigateToSignIn: () -> Unit = { },
 ) {
     val loginUiState = loginViewModel?.loginUiState
-    val isSignError = loginUiState?.signInError != null
+    val isSignError = loginUiState?.signUpError != null
     val context = LocalContext.current
 
     Column(
@@ -54,10 +52,9 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-
         Spacer(modifier = Modifier.size(40.dp))
         Text(
-            text = AnnotatedString("Login"),
+            text = AnnotatedString("Sign Up"),
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Black
@@ -65,7 +62,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.size(40.dp))
         if (isSignError) {
             Text(
-                text = loginUiState?.signInError ?: "Unknown Error",
+                text = loginUiState?.signUpError ?: "Unknown Error",
                 color = Color.Red
             )
         }
@@ -73,7 +70,23 @@ fun LoginScreen(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 6.dp),
+            value = loginUiState?.userName ?: "",
+            onValueChange = {
+                loginViewModel?.onUserNameChanged(it)
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Person, contentDescription = "email")
+            },
+            label = {
+                Text(text = "Username")
+            },
+            isError = isSignError
+        )
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 6.dp),
             value = loginUiState?.userEmail ?: "",
             onValueChange = {
                 loginViewModel?.onUserEmailChange(it)
@@ -90,7 +103,7 @@ fun LoginScreen(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 6.dp),
             value = loginUiState?.userPassword ?: "",
             onValueChange = {
                 loginViewModel?.onPasswordChanged(it)
@@ -104,14 +117,28 @@ fun LoginScreen(
             isError = isSignError,
             visualTransformation = PasswordVisualTransformation()
         )
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 6.dp),
+            value = loginUiState?.confirmPassword ?: "",
+            onValueChange = {
+                loginViewModel?.onConfirmPasswordChange(it)
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Default.Lock, contentDescription = "email")
+            },
+            label = {
+                Text(text = "Confirm Password")
+            },
+            isError = isSignError,
+            visualTransformation = PasswordVisualTransformation()
+        )
         Spacer(modifier = Modifier.size(20.dp))
 
         Button(
-            onClick = { loginViewModel?.signInUser(context) }) {
-            Text(
-                text = "Sign In",
-                modifier = Modifier.padding(horizontal = 40.dp, vertical = 6.dp)
-            )
+            onClick = { loginViewModel?.createNewUser(context) }) {
+            Text(text = "Sign In", modifier = Modifier.padding(horizontal = 40.dp, vertical = 6.dp))
         }
 
         Spacer(modifier = Modifier.size(20.dp))
@@ -121,14 +148,13 @@ fun LoginScreen(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Don't have an Account?")
+            Text(text = "Already have an Account?")
             Spacer(modifier = Modifier.size(10.dp))
             TextButton(onClick = {
-                // onNavigateToSignUp.invoke()
                 navController.popBackStack()
-                navController.navigate(route = AuthNavRoutes.SignUp.route)
+                navController.navigate(route = AuthNavRoutes.Login.route)
             }) {
-                Text(text = "Sign Up")
+                Text(text = "Sign In")
             }
 
         }
@@ -139,10 +165,7 @@ fun LoginScreen(
 
         LaunchedEffect(key1 = loginViewModel?.userExists) {
             if (loginViewModel?.userExists == true) {
-                //onNavigateToHome.invoke()
-
-                navController.popBackStack()
-                navController.navigate(Graph.MAIN_GRAPH)
+                onNavigateToHome.invoke()
             }
         }
 
@@ -153,11 +176,13 @@ fun LoginScreen(
 
 @Preview
 @Composable
-fun LoginPreview(
+fun SignUpScreenPreview(
 
 ) {
     NewNotesAppTheme(darkTheme = false) {
-        LoginScreen(rememberNavController())
+        SignUpScreen(rememberNavController()) {
+
+        }
     }
 
 }
