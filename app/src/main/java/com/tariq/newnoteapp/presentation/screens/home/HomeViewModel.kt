@@ -1,5 +1,6 @@
 package com.tariq.newnoteapp.presentation.screens.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -44,8 +45,10 @@ class HomeViewModel @Inject constructor(
 
     private fun getAllNotesData(userId: String) = viewModelScope.launch {
         remoteDataRepository.getAllNotes(userId).collect {
+            Log.i("TAG", "getAllNotesData: ")
             homeUiState = homeUiState.copy(notesData = it)
         }
+
     }
 
     fun deleteNote(noteId: String) = remoteDataRepository.deleteNoteFromFirebase(noteId) {

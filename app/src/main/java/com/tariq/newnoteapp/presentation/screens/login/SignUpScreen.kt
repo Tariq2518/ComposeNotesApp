@@ -175,7 +175,7 @@ fun SignUpScreen(
 
         Button(
             onClick = { loginViewModel?.createNewUser(context) }) {
-            Text(text = "Sign In", modifier = Modifier.padding(horizontal = 40.dp, vertical = 6.dp))
+            Text(text = "Sign Up", modifier = Modifier.padding(horizontal = 40.dp, vertical = 6.dp))
         }
 
         Spacer(modifier = Modifier.size(20.dp))
@@ -203,7 +203,10 @@ fun SignUpScreen(
         LaunchedEffect(key1 = loginViewModel?.userExists) {
             if (loginViewModel?.userExists == true) {
                 navController.popBackStack()
-                navController.navigate(MainNavRouts.Home.routes)
+                navController.navigate(MainNavRouts.Home.routes){
+                    popUpTo(MainNavRouts.Home.routes)
+                    launchSingleTop = true
+                }
             }
         }
 

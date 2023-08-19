@@ -1,5 +1,6 @@
 package com.tariq.newnoteapp.presentation.screens.login
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,7 +20,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -34,15 +34,14 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.UiMode
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.tariq.newnoteapp.data.models.ui_states.LoginUiState
 import com.tariq.newnoteapp.navigation.AuthNavRoutes
 import com.tariq.newnoteapp.navigation.Graph
 import com.tariq.newnoteapp.navigation.MainNavRouts
-import com.tariq.newnoteapp.navigation.RootNavGraph
 import com.tariq.newnoteapp.ui.theme.NewNotesAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,8 +52,8 @@ fun LoginScreen(
     onNavigateToHome: () -> Unit = { },
     onNavigateToSignUp: () -> Unit = { },
 ) {
-    val loginUiState = loginViewModel?.loginUiState
-    val isSignError = loginUiState?.signInError != null
+    val loginUiState = loginViewModel?.loginUiState ?: LoginUiState()
+    val isSignError = loginUiState.signInError != null
     val context = LocalContext.current
 
     Column(
@@ -75,7 +74,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.size(40.dp))
         if (isSignError) {
             Text(
-                text = loginUiState?.signInError ?: "Unknown Error",
+                text = loginUiState.signInError ?: "Unknown Error",
                 color = Color.Red
             )
         }
@@ -84,7 +83,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            value = loginUiState?.userEmail ?: "",
+            value = loginUiState.userEmail ?: "",
             onValueChange = {
                 loginViewModel?.onUserEmailChange(it)
             },
@@ -108,7 +107,7 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            value = loginUiState?.userPassword ?: "",
+            value = loginUiState.userPassword ?: "",
             onValueChange = {
                 loginViewModel?.onPasswordChanged(it)
             },
@@ -148,8 +147,6 @@ fun LoginScreen(
             Text(text = "Don't have an Account?")
             Spacer(modifier = Modifier.size(10.dp))
             TextButton(onClick = {
-                // onNavigateToSignUp.invoke()
-                navController.popBackStack()
                 navController.navigate(route = AuthNavRoutes.SignUp.route)
             }) {
                 Text(text = "Sign Up")
@@ -161,15 +158,20 @@ fun LoginScreen(
             CircularProgressIndicator()
         }
 
-        LaunchedEffect(key1 = loginViewModel?.userExists) {
-            if (loginViewModel?.userExists == true) {
-                //onNavigateToHome.invoke()
-                navController.navigate(Graph.MAIN_GRAPH)
-            }
-        }
+
 
     }
 
+    LaunchedEffect(key1 = loginViewModel?.userExists) {
+        Log.i("TAG", "LoginScreen: ")
+        if (loginViewModel?.userExists == true) {
+            navController.popBackStack()
+            navController.navigate(Graph.MAIN_GRAPH){
+                popUpTo(Graph.MAIN_GRAPH)
+                launchSingleTop = true
+            }
+        }
+    }
 }
 
 

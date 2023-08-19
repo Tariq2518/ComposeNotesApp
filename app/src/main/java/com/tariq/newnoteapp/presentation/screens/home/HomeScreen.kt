@@ -2,6 +2,9 @@ package com.tariq.newnoteapp.presentation.screens.home
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -70,9 +73,6 @@ fun HomeScreen(
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = Unit) {
-        homeViewModel?.loadNotesData()
-    }
 
     Scaffold(
         floatingActionButton = {
@@ -142,7 +142,9 @@ fun HomeScreen(
                             }
 
                         }
-                        AnimatedVisibility(visible = openDialog) {
+                        AnimatedVisibility(
+                            visible = openDialog
+                        ) {
                             AlertDialog(
                                 onDismissRequest = {
                                     openDialog = false
@@ -188,9 +190,12 @@ fun HomeScreen(
 
         }
     )
-    LaunchedEffect(key1 = homeViewModel?.userExists) {
+    LaunchedEffect(key1 = Unit) {
+        Log.i("TAG", "HomeScreen: ${homeViewModel?.userExists == false}")
         if (homeViewModel?.userExists == false) {
             navController.navigate(AuthNavRoutes.Splash.route)
+        }else{
+            homeViewModel?.loadNotesData()
         }
     }
 

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -15,7 +16,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.tariq.newnoteapp.R
 import com.tariq.newnoteapp.navigation.AuthNavRoutes
+import com.tariq.newnoteapp.navigation.MainNavRouts
 import com.tariq.newnoteapp.presentation.screens.login.LoginViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun Splash(
@@ -34,11 +37,15 @@ fun Splash(
             contentDescription = "",
         )
 
-
-        Handler(Looper.getMainLooper()).postDelayed({
+        LaunchedEffect(Unit) {
+            delay(1000) // Delay for 1 second
             navController.popBackStack()
-            navController.navigate(route = AuthNavRoutes.Login.route)
-        }, 1000)
+            navController.navigate(route = AuthNavRoutes.Login.route) {
+                popUpTo(AuthNavRoutes.Login.route)
+                launchSingleTop = true
+            }
+        }
+
 
 
     }

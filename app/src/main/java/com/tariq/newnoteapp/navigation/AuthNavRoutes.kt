@@ -24,7 +24,8 @@ fun NavGraphBuilder.authNavGraph(
 ) {
 
     navigation(
-        route = Graph.AUTH_GRAPH, startDestination = AuthNavRoutes.Splash.route
+        route = Graph.AUTH_GRAPH,
+        startDestination = AuthNavRoutes.Splash.route
     ) {
         composable(
             route = AuthNavRoutes.Splash.route
