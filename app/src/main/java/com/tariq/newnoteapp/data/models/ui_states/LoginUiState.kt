@@ -1,4 +1,4 @@
-package com.tariq.newnoteapp.data
+package com.tariq.newnoteapp.data.models.ui_states
 
 data class LoginUiState(
     val userName:String = "",

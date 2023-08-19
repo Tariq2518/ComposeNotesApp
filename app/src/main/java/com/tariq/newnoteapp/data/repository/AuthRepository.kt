@@ -1,4 +1,4 @@
-package com.tariq.newnoteapp.repository
+package com.tariq.newnoteapp.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

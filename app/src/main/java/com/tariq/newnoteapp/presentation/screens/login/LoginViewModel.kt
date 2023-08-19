@@ -1,19 +1,17 @@
-package com.tariq.newnoteapp.presentation.login
+package com.tariq.newnoteapp.presentation.screens.login
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tariq.newnoteapp.data.LoginUiState
-import com.tariq.newnoteapp.repository.AuthRepository
+import com.tariq.newnoteapp.data.models.ui_states.LoginUiState
+import com.tariq.newnoteapp.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class LoginViewModel
@@ -71,7 +69,7 @@ class LoginViewModel
 
             loginUiState = loginUiState.copy(signUpError = null)
 
-            repository?.createNewUser(loginUiState.userEmail, loginUiState.userPassword) { isSuccessful ->
+            repository.createNewUser(loginUiState.userEmail, loginUiState.userPassword) { isSuccessful ->
                 loginUiState = if (isSuccessful) {
                     Toast.makeText(context, "Sign up successful", Toast.LENGTH_SHORT).show()
                     loginUiState.copy(isSuccess = true)

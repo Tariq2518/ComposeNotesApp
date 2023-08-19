@@ -1,4 +1,4 @@
-package com.tariq.newnoteapp.presentation.login
+package com.tariq.newnoteapp.presentation.screens.login
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -19,6 +22,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -31,17 +36,20 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.UiMode
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.tariq.newnoteapp.navigation.AuthNavRoutes
 import com.tariq.newnoteapp.navigation.Graph
+import com.tariq.newnoteapp.navigation.MainNavRouts
+import com.tariq.newnoteapp.navigation.RootNavGraph
 import com.tariq.newnoteapp.ui.theme.NewNotesAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-    loginViewModel: LoginViewModel? = null,
+    loginViewModel: LoginViewModel? = hiltViewModel(),
     onNavigateToHome: () -> Unit = { },
     onNavigateToSignUp: () -> Unit = { },
 ) {
@@ -50,7 +58,9 @@ fun LoginScreen(
     val context = LocalContext.current
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -70,7 +80,7 @@ fun LoginScreen(
             )
         }
         Spacer(modifier = Modifier.size(20.dp))
-        OutlinedTextField(
+        TextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -84,10 +94,17 @@ fun LoginScreen(
             label = {
                 Text(text = "Email")
             },
-            isError = isSignError
+            isError = isSignError,
+            shape = RoundedCornerShape(20),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
         )
 
-        OutlinedTextField(
+        TextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -102,7 +119,14 @@ fun LoginScreen(
                 Text(text = "Password")
             },
             isError = isSignError,
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation(),
+            shape = RoundedCornerShape(20),
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            )
         )
         Spacer(modifier = Modifier.size(20.dp))
 
@@ -140,8 +164,6 @@ fun LoginScreen(
         LaunchedEffect(key1 = loginViewModel?.userExists) {
             if (loginViewModel?.userExists == true) {
                 //onNavigateToHome.invoke()
-
-                navController.popBackStack()
                 navController.navigate(Graph.MAIN_GRAPH)
             }
         }
