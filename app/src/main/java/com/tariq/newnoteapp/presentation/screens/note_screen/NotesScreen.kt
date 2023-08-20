@@ -1,7 +1,5 @@
 package com.tariq.newnoteapp.presentation.screens.note_screen
 
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,13 +13,11 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -30,20 +26,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.tariq.newnoteapp.data.models.ui_states.NotesScreenUiState
@@ -90,18 +78,18 @@ fun NotesScreen(
         snackbarHost = { SnackbarHost(snackBarHostState) },
         floatingActionButton = {
 
-                FloatingActionButton(onClick = {
-                    if (isNoteIdNotEmpty == true) {
-                        if (noteId != null) {
-                            notesViewModel?.updateNoteInFirebase(noteId)
-                        }
-                    } else {
-                        if (isUiNotEmpty)
-                            notesViewModel?.addNoteToFirebase()
+            FloatingActionButton(onClick = {
+                if (isNoteIdNotEmpty == true) {
+                    if (noteId != null) {
+                        notesViewModel?.updateNoteInFirebase(noteId)
                     }
-                }) {
-                    Icon(imageVector = currentIcon, contentDescription = "")
+                } else {
+                    if (isUiNotEmpty)
+                        notesViewModel?.addNoteToFirebase()
                 }
+            }) {
+                Icon(imageVector = currentIcon, contentDescription = "")
+            }
 
 
         },

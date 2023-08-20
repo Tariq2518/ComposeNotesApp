@@ -47,8 +47,6 @@ import com.tariq.newnoteapp.ui.theme.NewNotesAppTheme
 fun SignUpScreen(
     navController: NavHostController,
     loginViewModel: LoginViewModel? = hiltViewModel(),
-    onNavigateToHome: () -> Unit = {},
-    onNavigateToSignIn: () -> Unit = { },
 ) {
     val loginUiState = loginViewModel?.loginUiState
     val isSignError = loginUiState?.signUpError != null
@@ -203,7 +201,7 @@ fun SignUpScreen(
         LaunchedEffect(key1 = loginViewModel?.userExists) {
             if (loginViewModel?.userExists == true) {
                 navController.popBackStack()
-                navController.navigate(MainNavRouts.Home.routes){
+                navController.navigate(MainNavRouts.Home.routes) {
                     popUpTo(MainNavRouts.Home.routes)
                     launchSingleTop = true
                 }
@@ -221,9 +219,7 @@ fun SignUpScreenPreview(
 
 ) {
     NewNotesAppTheme(darkTheme = false) {
-        SignUpScreen(rememberNavController()) {
-
-        }
+        SignUpScreen(rememberNavController())
     }
 
 }

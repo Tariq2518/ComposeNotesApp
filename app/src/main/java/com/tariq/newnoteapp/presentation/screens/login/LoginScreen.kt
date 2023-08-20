@@ -41,7 +41,6 @@ import androidx.navigation.compose.rememberNavController
 import com.tariq.newnoteapp.data.models.ui_states.LoginUiState
 import com.tariq.newnoteapp.navigation.AuthNavRoutes
 import com.tariq.newnoteapp.navigation.Graph
-import com.tariq.newnoteapp.navigation.MainNavRouts
 import com.tariq.newnoteapp.ui.theme.NewNotesAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,8 +48,6 @@ import com.tariq.newnoteapp.ui.theme.NewNotesAppTheme
 fun LoginScreen(
     navController: NavHostController,
     loginViewModel: LoginViewModel? = hiltViewModel(),
-    onNavigateToHome: () -> Unit = { },
-    onNavigateToSignUp: () -> Unit = { },
 ) {
     val loginUiState = loginViewModel?.loginUiState ?: LoginUiState()
     val isSignError = loginUiState.signInError != null
@@ -159,14 +156,13 @@ fun LoginScreen(
         }
 
 
-
     }
 
     LaunchedEffect(key1 = loginViewModel?.userExists) {
         Log.i("TAG", "LoginScreen: ")
         if (loginViewModel?.userExists == true) {
             navController.popBackStack()
-            navController.navigate(Graph.MAIN_GRAPH){
+            navController.navigate(Graph.MAIN_GRAPH) {
                 popUpTo(Graph.MAIN_GRAPH)
                 launchSingleTop = true
             }

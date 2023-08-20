@@ -70,14 +70,11 @@ fun HomeScreen(
     var selectedNote: NotesModel? by remember {
         mutableStateOf(null)
     }
-    val scope = rememberCoroutineScope()
-    val snackBarHostState = remember { SnackbarHostState() }
 
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = {
-                navController.popBackStack()
                 navController.navigate(MainNavRouts.NotesScreen.passNoteId(""))
             }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "")

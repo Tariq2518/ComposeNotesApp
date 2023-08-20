@@ -85,7 +85,7 @@ fun NotesItem(
                     modifier = Modifier
                         .padding(4.dp)
                         .align(Alignment.End),
-                    maxLines = 4
+                    maxLines = 1
                 )
             }
         }
@@ -94,6 +94,6 @@ fun NotesItem(
 }
 
 private fun formatDate(timestamp: Timestamp): String {
-    val sdf = SimpleDateFormat("MM-dd-yy hh:mm", Locale.getDefault())
+    val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
     return sdf.format(timestamp.toDate())
 }
