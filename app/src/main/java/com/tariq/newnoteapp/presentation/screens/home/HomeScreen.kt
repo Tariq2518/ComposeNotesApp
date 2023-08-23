@@ -5,18 +5,27 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -30,6 +39,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
@@ -44,6 +55,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -123,11 +135,35 @@ fun HomeScreen(
                     }
 
                     is Resources.Success -> {
+                        var search by remember { mutableStateOf("") }
+
+                        AppSearchBar(search = search, onValueChange = {
+                            search = it
+                        })
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(2),
-                            contentPadding = PaddingValues(16.dp)
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.Top
                         ) {
-                            items(homeUiState.notesData.data ?: emptyList()) { notes ->
+
+                            val filteredNotes: List<NotesModel> = if (search.isEmpty()) {
+                                homeUiState.notesData.data ?: emptyList()
+                            } else {
+                                val result: ArrayList<NotesModel> = arrayListOf()
+                                for (item in homeUiState.notesData.data ?: emptyList()) {
+                                    if (item.noteTitle.lowercase().contains(search.lowercase())
+                                        || item.notesDescription.lowercase().contains(search.lowercase())
+                                    ) {
+                                        result.add(item)
+                                    }
+                                }
+                                result
+
+                            }
+
+                            items(filteredNotes, key = {
+                                it.documentId
+                            }) { notes ->
                                 NotesItem(notesModel = notes,
                                     onLongClick = {
                                         openDialog = true
@@ -191,9 +227,51 @@ fun HomeScreen(
         Log.i("TAG", "HomeScreen: ${homeViewModel?.userExists == false}")
         if (homeViewModel?.userExists == false) {
             navController.navigate(AuthNavRoutes.Splash.route)
-        }else{
+        } else {
             homeViewModel?.loadNotesData()
         }
     }
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppSearchBar(
+    search: String,
+    onValueChange: (String) -> Unit
+
+) {
+    TextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        value = search,
+        onValueChange = {
+            onValueChange.invoke(it)
+        },
+        leadingIcon = {
+            Icon(imageVector = Icons.Default.Search, contentDescription = "email")
+        },
+        trailingIcon = {
+            if (search.isNotEmpty()) {
+                IconButton(onClick = {
+                    onValueChange.invoke("")
+                }) {
+                    Icon(imageVector = Icons.Default.Close, contentDescription = "email")
+                }
+
+            }
+        },
+        placeholder = {
+            Text(text = "Search here...")
+        },
+        shape = RoundedCornerShape(20),
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent
+        )
+    )
 
 }
